@@ -26,4 +26,17 @@ It will dump the provided database:
  - will delete any file older than ${RETENTION} days
 ```
 
+`/usr/local/bin/sync_to_s3.sh`:
+
+```
+Usage:
+	S3_BUCKET_NAME=my_bucket \
+	S3_ORIGIN_PATH=/data \
+		${SCRIPT_NAME}
+
+Other optional variables:
+	S3_ENDPOINT=...
+
+I will copy all the files from /data into the given S3 bucket.
+```
 
