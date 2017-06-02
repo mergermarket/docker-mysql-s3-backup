@@ -16,6 +16,8 @@ _aws() {
 TEMPDIR_ROOT="$(mktemp -d)"
 trap "{ rm -rf ${TEMPDIR_ROOT:-/tmp/dummy}; }" EXIT INT TERM
 
+echo "Waiting S3 localstack to warm up..."
+sleep 5
 "${SCRIPT_DIR}"/helpers/wait-for-it.sh "${S3_ENDPOINT##http://}"
 
 _before_each() {
