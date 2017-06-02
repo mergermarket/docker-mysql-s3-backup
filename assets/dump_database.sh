@@ -10,8 +10,8 @@ Usage:
 	DATABASE_TYPE=mysql \
 	DATABASE_HOSTNAME=server.mysql.company.com \
 	DATABASE_PORT=3306 \
-	DATABASE_DB_NAME=jira \
-	DATABASE_USERNAME=jira \
+	DATABASE_DB_NAME=foobar \
+	DATABASE_USERNAME=foobar \
 	DATABASE_PASSWORD=jellyfish \
 	RETENTION=30 \
 	DUMPS_PATH=/data/mysql \
