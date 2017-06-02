@@ -5,7 +5,6 @@ services:
     build:
       context: ../
     volumes:
-      - /mnt/data
       - ../:/code
     links:
       - mysql
@@ -26,8 +25,6 @@ services:
       - '3306'
     image: mysql:5.6
     hostname: mysql
-    volumes:
-      - mysqldata:/var/lib/mysql/
     environment:
       - 'MYSQL_DATABASE=jira'
       - 'MYSQL_USER=jira'
@@ -40,9 +37,3 @@ services:
       - '4572'
     image: atlassianlabs/localstack
     hostname: localstack
-
-
-volumes:
-  mysqldata:
-    external: false
-
