@@ -58,8 +58,8 @@ _create_test_dir(){
 it_syncs_a_complete_directory() {
 	export S3_BUCKET_NAME="${TEST_BUCKET_NAME}"
 	export S3_BUCKET_PATH="backup/test"
-	export S3_ORIGIN_PATH="${TEMPDIR}/data"
-	_create_test_dir "${S3_ORIGIN_PATH}"
+	export SYNC_ORIGIN_PATH="${TEMPDIR}/data"
+	_create_test_dir "${SYNC_ORIGIN_PATH}"
 
 	"${PROJECT_DIR}/assets/sync_to_s3.sh"
 
@@ -75,12 +75,12 @@ it_syncs_a_complete_directory() {
 it_deletes_old_files() {
 	export S3_BUCKET_NAME="${TEST_BUCKET_NAME}"
 	export S3_BUCKET_PATH="/backup/test"
-	export S3_ORIGIN_PATH="${TEMPDIR}/data"
-	_create_test_dir "${S3_ORIGIN_PATH}"
+	export SYNC_ORIGIN_PATH="${TEMPDIR}/data"
+	_create_test_dir "${SYNC_ORIGIN_PATH}"
 
 	"${PROJECT_DIR}/assets/sync_to_s3.sh"
 	for f in foo/other_file1 foo/a/3/file2; do
-		rm "${S3_ORIGIN_PATH}/$f"
+		rm "${SYNC_ORIGIN_PATH}/$f"
 	done
 	"${PROJECT_DIR}/assets/sync_to_s3.sh"
 

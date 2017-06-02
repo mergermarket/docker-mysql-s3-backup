@@ -32,7 +32,7 @@ It will dump the provided database:
 Usage:
 	S3_BUCKET_NAME=my_bucket \
 	S3_BUCKET_PATH=/backup/jira/live \
-	S3_ORIGIN_PATH=/data \
+	SYNC_ORIGIN_PATH=/data \
 		sync_to_s3.sh
 
 Other optional variables:
