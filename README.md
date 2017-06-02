@@ -13,8 +13,8 @@ Usage:
 	DATABASE_TYPE=mysql \
 	DATABASE_HOSTNAME=server.mysql.company.com \
 	DATABASE_PORT=3306 \
-	DATABASE_DB_NAME=jira \
-	DATABASE_USERNAME=jira \
+	DATABASE_DB_NAME=foobar \
+	DATABASE_USERNAME=foobar \
 	DATABASE_PASSWORD=jellyfish \
 	RETENTION=30 \
 	DUMPS_PATH=/data/mysql \
@@ -31,7 +31,7 @@ It will dump the provided database:
 ```
 Usage:
 	S3_BUCKET_NAME=my_bucket \
-	S3_BUCKET_PATH=/backup/jira/live \
+	S3_BUCKET_PATH=/backup/foobar/live \
 	SYNC_ORIGIN_PATH=/data \
 		sync_to_s3.sh
 

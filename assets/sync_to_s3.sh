@@ -7,7 +7,7 @@ help() {
     cat <<EOF
 Usage:
 	S3_BUCKET_NAME=my_bucket \
-	S3_BUCKET_PATH=/backup/jira/live \
+	S3_BUCKET_PATH=/backup/foobar/live \
 	SYNC_ORIGIN_PATH=/data \
 		${SCRIPT_NAME}
 

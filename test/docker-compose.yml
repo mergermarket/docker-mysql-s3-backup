@@ -12,8 +12,8 @@ services:
     environment:
       - 'DATABASE_TYPE=mysql'
       - 'DATABASE_HOSTNAME=mysql'
-      - 'DATABASE_DB_NAME=jira'
-      - 'DATABASE_USERNAME=jira'
+      - 'DATABASE_DB_NAME=foobar'
+      - 'DATABASE_USERNAME=foobar'
       - 'DATABASE_PASSWORD=jellyfish'
       - 'DUMPS_PATH=/mnt/data/mysql/'
       - 'RETENTION=2'
@@ -26,8 +26,8 @@ services:
     image: mysql:5.6
     hostname: mysql
     environment:
-      - 'MYSQL_DATABASE=jira'
-      - 'MYSQL_USER=jira'
+      - 'MYSQL_DATABASE=foobar'
+      - 'MYSQL_USER=foobar'
       - 'MYSQL_PASSWORD=jellyfish'
       - 'MYSQL_ROOT_PASSWORD=jellyfish'
     command: "--character-set-server=utf8 --collation-server=utf8_bin"
