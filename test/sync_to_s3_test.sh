@@ -15,7 +15,6 @@ _aws() {
 # before all
 TEMPDIR_ROOT="$(mktemp -d)"
 trap "{ rm -rf ${TEMPDIR_ROOT:-/tmp/dummy}; }" EXIT INT TERM
-mkdir -p ~/.aws && touch ~/.aws/config
 
 "${SCRIPT_DIR}"/helpers/wait-for-it.sh "${S3_ENDPOINT##http://}"
 
@@ -52,7 +51,6 @@ _create_test_dir(){
 		mkdir -p "$root_dir/$(dirname $f)"
 		touch "$root_dir/${f}"
 	done
-	find     $root_dir
 }
 
 it_syncs_a_complete_directory() {
