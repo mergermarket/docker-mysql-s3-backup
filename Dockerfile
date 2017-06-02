@@ -10,3 +10,6 @@ RUN apk add --update $PACKAGES \
 
 ADD ./assets/dump_database.sh /usr/local/bin/
 RUN test -x /usr/local/bin/dump_database.sh
+
+ADD ./assets/sync_to_s3_test.sh /usr/local/bin/
+RUN test -x /usr/local/bin/sync_to_s3_test.sh

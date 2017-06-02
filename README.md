@@ -32,7 +32,7 @@ It will dump the provided database:
 Usage:
 	S3_BUCKET_NAME=my_bucket \
 	S3_ORIGIN_PATH=/data \
-		${SCRIPT_NAME}
+		sync_to_s3.sh
 
 Other optional variables:
 	S3_ENDPOINT=...

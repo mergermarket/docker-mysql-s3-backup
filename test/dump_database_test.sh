@@ -5,6 +5,8 @@ set -e -u -o pipefail
 PROJECT_DIR="$(dirname $0)/.."
 SCRIPT_DIR="$(dirname $0)"
 
+source "${SCRIPT_DIR}/common.sh"
+
 export DATABASE_TYPE=mysql
 export DATABASE_HOSTNAME=${DATABASE_HOSTNAME:-mysql}
 export DATABASE_PORT=${DATABASE_PORT:-3306}
@@ -36,6 +38,7 @@ trap "{ rm -rf ${TEMPDIR_ROOT:-/tmp/dummy}; }" EXIT INT TERM
 
 
 _before_each() {
+	TEMPDIR=$(mktemp -d "${TEMPDIR_ROOT}/tests.XXXXXX")
 	_mysql -e "drop database $DATABASE_DB_NAME; create database $DATABASE_DB_NAME;"
 	_mysql -e "
 		CREATE TABLE pet (
@@ -52,18 +55,6 @@ _before_each() {
 
 _after_each() {
 	true
-}
-
-# based on https://github.com/concourse/git-resource/blob/master/test/helpers.sh#L19
-_run() {
-	export TEMPDIR=$(mktemp -d ${TEMPDIR_ROOT}/tests.XXXXXX)
-
-	echo -e 'running \e[33m'"$@"$'\e[0m...'
-
-	_before_each 2>&1 | sed -e 's/^/  /g'
-	eval "$@" 2>&1 | sed -e 's/^/  /g'
-	_after_each 2>&1 | sed -e 's/^/  /g'
-	echo ""
 }
 
 it_creates_a_sqldump_with_valid_name() {
