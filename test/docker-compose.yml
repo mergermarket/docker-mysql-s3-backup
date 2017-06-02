@@ -1,0 +1,48 @@
+version: '2'
+
+services:
+  mysql-s3-backup:
+    build:
+      context: ../
+    volumes:
+      - /mnt/data
+      - ../:/code
+    links:
+      - mysql
+      - localstack
+    environment:
+      - 'DATABASE_TYPE=mysql'
+      - 'DATABASE_HOSTNAME=mysql'
+      - 'DATABASE_DB_NAME=jira'
+      - 'DATABASE_USERNAME=jira'
+      - 'DATABASE_PASSWORD=jellyfish'
+      - 'DUMPS_PATH=/mnt/data/mysql/'
+      - 'RETENTION=2'
+      - 'S3_ENDPOINT=http://localstack:4572'
+    command: "true"
+
+  mysql:
+    expose:
+      - '3306'
+    image: mysql:5.6
+    hostname: mysql
+    volumes:
+      - mysqldata:/var/lib/mysql/
+    environment:
+      - 'MYSQL_DATABASE=jira'
+      - 'MYSQL_USER=jira'
+      - 'MYSQL_PASSWORD=jellyfish'
+      - 'MYSQL_ROOT_PASSWORD=jellyfish'
+    command: "--character-set-server=utf8 --collation-server=utf8_bin"
+
+  localstack:
+    expose:
+      - '4572'
+    image: atlassianlabs/localstack
+    hostname: localstack
+
+
+volumes:
+  mysqldata:
+    external: false
+
