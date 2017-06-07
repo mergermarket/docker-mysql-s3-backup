@@ -1,7 +1,7 @@
 FROM alpine:3.3
 
 ENV AWSCLI_VERSION "1.10.38"
-ENV PACKAGES "groff less python py-pip curl openssl ca-certificates mysql-client bash findutils"
+ENV PACKAGES "groff less python py-pip curl openssl ca-certificates mysql-client bash findutils jq"
 
 RUN apk add --update $PACKAGES \
     && pip install awscli==$AWSCLI_VERSION \

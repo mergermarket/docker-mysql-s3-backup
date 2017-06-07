@@ -89,5 +89,41 @@ it_deletes_old_files() {
 	done
 }
 
+it_loads_the_aws_credentials_from_container_role() {
+	export S3_BUCKET_NAME="${TEST_BUCKET_NAME}"
+	export S3_BUCKET_PATH="/backup/test"
+	export SYNC_ORIGIN_PATH="${TEMPDIR}/data"
+	export AWS_CONTAINER_CREDENTIALS_RELATIVE_URI="/v2/credentials/82ece582-9599-454e-8dd6-9a673aee2a72"
+
+	# Mock curl and aws commands
+	mkdir "${TEMPDIR}/bin"
+	cat > "${TEMPDIR}/bin/curl" <<"EOF"
+#!/bin/sh
+cat <<FOE
+{
+  "RoleArn":"arn:aws:iam::733578946173:role/aslive-platform-crowd-s3-backup00c832349c4af0505ca1bfe870",
+  "AccessKeyId":"__access_key",
+  "SecretAccessKey":"__secret_access_key",
+  "Token":"__session_token",
+  "Expiration":"2017-06-07T23:00:21Z"
+}
+FOE
+EOF
+	cat > "${TEMPDIR}/bin/aws" <<"EOF"
+#!/bin/sh
+env | grep AWS
+EOF
+
+	chmod +x "${TEMPDIR}"/bin/*
+	export PATH="${TEMPDIR}/bin:${PATH}"
+
+	output=$("${PROJECT_DIR}/assets/sync_to_s3.sh")
+
+	echo "${output}" | grep -q 'AWS_ACCESS_KEY_ID=__access_key'
+	echo "${output}" | grep -q 'AWS_SECRET_ACCESS_KEY=__secret_access_key'
+	echo "${output}" | grep -q 'AWS_SESSION_TOKEN=__session_token'
+}
+
 _run it_syncs_a_complete_directory
 _run it_deletes_old_files
+_run it_loads_the_aws_credentials_from_container_role
