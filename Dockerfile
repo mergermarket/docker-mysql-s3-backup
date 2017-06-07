@@ -13,3 +13,5 @@ RUN test -x /usr/local/bin/dump_database.sh
 
 ADD ./assets/sync_to_s3.sh /usr/local/bin/
 RUN test -x /usr/local/bin/sync_to_s3.sh
+
+CMD [ "sh", "-c", "/usr/local/bin/dump_database.sh && /usr/local/bin/sync_to_s3.sh" ]
