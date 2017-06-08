@@ -31,4 +31,11 @@ do_sync() {
     	"s3://${S3_BUCKET_NAME}/${S3_BUCKET_PATH}"
 }
 
+load_aws_credentials(){
+    if [ -n "${AWS_CONTAINER_CREDENTIALS_RELATIVE_URI:-}" ]; then
+	eval $(curl -qs 169.254.170.2$AWS_CONTAINER_CREDENTIALS_RELATIVE_URI | jq -r '"export AWS_ACCESS_KEY_ID=\( .AccessKeyId )\nexport AWS_SECRET_ACCESS_KEY=\( .SecretAccessKey )\nexport AWS_SESSION_TOKEN=\( .Token )"')
+    fi
+}
+
+load_aws_credentials
 do_sync
