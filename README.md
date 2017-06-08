@@ -23,7 +23,7 @@ Usage:
 It will dump the provided database:
  - in the directory ${DUMPS_PATH}.
  - will keep a naming like: ${DATABASE_DB_NAME}-2017-02-03-17-03.
- - will delete any file older than ${RETENTION} days
+ - will keep the ${RETENTION} dumps more recent
 ```
 
 `/usr/local/bin/sync_to_s3.sh`:

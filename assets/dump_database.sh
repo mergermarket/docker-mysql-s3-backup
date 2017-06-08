@@ -43,7 +43,17 @@ dump_mysql() {
 }
 
 delete_old_dumps() {
-	find "${DUMPS_PATH}" -mtime "+${RETENTION}" -a -name 'db-dump-*.sql.gz' | xargs -r rm -vf
+	# This line will:
+	# 1. Find for all the dumps and print the timestamp and name (-printf "%T@ %p\n")
+	# 2. Order by tiemstamp, increasing
+	# 3. the only the name (cut)
+	# 4. Drop the last ${RETENTION} lines.
+	# 5. Delete the rest of the files if any.
+	find "${DUMPS_PATH}" \
+	    -name 'db-dump-*.sql.gz' \
+	    -printf "%T@ %p\n" | \
+		sort -n | cut -f 2- -d ' ' | head -n "-${RETENTION}" | \
+		    xargs -r rm -vf
 }
 
 DUMPFILE="${DUMPS_PATH}/db-dump-${DATABASE_DB_NAME}-$(date +%Y-%m-%d-%H-%M-%S).sql.gz"

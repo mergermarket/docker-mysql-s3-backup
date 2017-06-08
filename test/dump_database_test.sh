@@ -85,11 +85,24 @@ it_deletes_old_dumps() {
 	for i in $(seq 35); do
 		timestamp="$(( $(date +%s) - ${i} * 24 * 60 * 60 ))"
 		touch -d @${timestamp} "${DUMPS_PATH}/db-dump-${DATABASE_DB_NAME}-$(date -d @${timestamp} +%Y-%m-%d-%H-%M-%S).sql.gz"
+		timestamp="$(( $timestamp + 12 * 60 * 60 ))"
+		touch -d @${timestamp} "${DUMPS_PATH}/db-dump-${DATABASE_DB_NAME}-$(date -d @${timestamp} +%Y-%m-%d-%H-%M-%S).sql.gz"
 	done
 
 	"${PROJECT_DIR}/assets/dump_database.sh"
 
-	test "$(find "${DUMPS_PATH}" -name 'db-dump-*.sql.gz' | wc -l)" == $((${RETENTION} + 1))
+	remanining_dumps="$(find "${DUMPS_PATH}" -name 'db-dump-*.sql.gz' | wc -l)"
+	expected_dumps="${RETENTION}"
+	if test "${remanining_dumps}" != ${expected_dumps}; then
+		echo "Fail: # of dumps ${remanining_dumps} do not match expected ${expected_dumps}"
+		return 1
+	fi
+
+	dumps_older_than_15_days="$(find "${DUMPS_PATH}" -name 'db-dump-*.sql.gz' -mtime +15)"
+	if test -n "${dumps_older_than_15_days}"; then
+		echo "Fail: there are tests older than 15 days: ${dumps_older_than_15_days}"
+		return 1
+	fi
 }
 
 _run it_creates_a_sqldump_with_valid_name
