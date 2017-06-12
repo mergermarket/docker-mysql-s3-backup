@@ -60,7 +60,7 @@ case "$alert_type" in
   ;;
 esac
 
-tags=$(echo "$tags" | sed 's/\s\+/\",\"/g;s/^/\"/;s/$/"/'  )
+tags=$(echo "$tags" | sed 's/\s\s*/\",\"/g;s/^/\"/;s/$/"/')
 
 api="https://app.datadoghq.com/api/v1"
 datadog="${api}/events?api_key=${api_key}"
