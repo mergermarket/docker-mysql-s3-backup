@@ -41,3 +41,11 @@ Other optional variables:
 I will copy all the files from /data into the given S3 bucket.
 ```
 
+Datadog integration:
+
+If `$DATADOG_API_KEY` is set, an event will be sent when both script finishes. Variables:
+
+  * `$DATADOG_API_KEY` Datadog API key to use
+  * `$DATADOG_TAGS` tags to send in the event.
+
+Currently we send and unique event `mysql-s3-backup.finished`
