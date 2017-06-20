@@ -38,4 +38,5 @@ load_aws_credentials(){
 }
 
 load_aws_credentials
-do_sync
+# aws s3 sync sometimes doesn't work if the files change, so this gives more chance of success
+do_sync || do_sync || do_sync
