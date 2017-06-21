@@ -12,7 +12,8 @@ Usage:
 		${SCRIPT_NAME}
 
 Other optional variables:
-	S3_ENDPOINT=...
+	S3_ENDPOINT=...  - S3 endpoint to connect to
+	SYNC_EXCLUDE=/data/dir/* - Directory to exclude
 
 I will copy all the files from /data into the given S3 bucket.
 EOF
@@ -27,6 +28,7 @@ do_sync() {
     aws s3 sync \
     	--delete \
     	${S3_ENDPOINT:+--endpoint-url ${S3_ENDPOINT}} \
+	${SYNC_EXCLUDE:+--exclude "${SYNC_EXCLUDE}"} \
     	"${SYNC_ORIGIN_PATH}" \
     	"s3://${S3_BUCKET_NAME}/${S3_BUCKET_PATH}"
 }

@@ -89,6 +89,33 @@ it_deletes_old_files() {
 	done
 }
 
+it_does_not_sync_the_exclude_files() {
+	export S3_BUCKET_NAME="${TEST_BUCKET_NAME}"
+	export S3_BUCKET_PATH="/backup/test"
+	export SYNC_ORIGIN_PATH="${TEMPDIR}/data"
+	export SYNC_EXCLUDE="foo/c/*"
+	_create_test_dir "${SYNC_ORIGIN_PATH}"
+
+	"${PROJECT_DIR}/assets/sync_to_s3.sh"
+
+	for f in $(_test_files); do
+	  case $f in
+	  foo/c/*)
+	    if _aws s3 ls "s3://${TEST_BUCKET_NAME}/${S3_BUCKET_PATH}/$f" > /dev/null; then
+	      echo "Error: did copy 's3://${TEST_BUCKET_NAME}/${S3_BUCKET_PATH}/$f'"
+	      return 1
+	    fi
+	  ;;
+	  *)
+	    if ! _aws s3 ls "s3://${TEST_BUCKET_NAME}/${S3_BUCKET_PATH}/$f" > /dev/null; then
+	      echo "Did not copy 's3://${TEST_BUCKET_NAME}/${S3_BUCKET_PATH}/$f'"
+	      return 1
+	    fi
+          ;;
+          esac
+	done
+}
+
 it_loads_the_aws_credentials_from_container_role() {
 	export S3_BUCKET_NAME="${TEST_BUCKET_NAME}"
 	export S3_BUCKET_PATH="/backup/test"
@@ -126,4 +153,5 @@ EOF
 
 _run it_syncs_a_complete_directory
 _run it_deletes_old_files
+_run it_does_not_sync_the_exclude_files
 _run it_loads_the_aws_credentials_from_container_role
