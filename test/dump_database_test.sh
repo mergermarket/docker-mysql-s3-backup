@@ -41,14 +41,25 @@ _before_each() {
 	TEMPDIR=$(mktemp -d "${TEMPDIR_ROOT}/tests.XXXXXX")
 	_mysql -e "drop database $DATABASE_DB_NAME; create database $DATABASE_DB_NAME;"
 	_mysql -e "
+		set foreign_key_checks=0;
 		CREATE TABLE pet (
 			name VARCHAR(20),
 			owner VARCHAR(20),
 			species VARCHAR(20),
 			sex CHAR(1),
 			birth DATE,
-			death DATE
-		);"
+			death DATE,
+			FOREIGN KEY (owner) REFERENCES theowner (name)
+		) ENGINE=INNODB;
+		CREATE TABLE theowner (
+			name VARCHAR(20) NOT NULL,
+			address VARCHAR(20),
+			PRIMARY KEY (name)
+		) ENGINE=INNODB;
+		set foreign_key_checks=1;
+		"
+	_mysql -e "INSERT INTO theowner VALUES ('Diane','123 High Street');"
+	_mysql -e "INSERT INTO theowner VALUES ('Jhon','222 1st Avenue');"
 	_mysql -e "INSERT INTO pet VALUES ('Puffball','Diane','hamster','f','1999-03-30',NULL);"
 	_mysql -e "INSERT INTO pet VALUES ('Daisy','Jhon','dog','m','2013-04-31','2015-04-31');"
 }
@@ -65,6 +76,17 @@ it_creates_a_sqldump_with_valid_name() {
 	test "$(find "${DUMPS_PATH}" -regex '.*/db-dump-[a-zA-Z0-9]+-[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]-[0-9][0-9]-[0-9][0-9]-[0-9][0-9]\.sql\.gz.*' | wc -l)" == 1
 }
 
+
+it_creates_a_valid_sqldump() {
+	export DUMPS_PATH="${TEMPDIR}/dumps"
+	"${PROJECT_DIR}/assets/dump_database.sh"
+	dump_file=$(find "${DUMPS_PATH}" -name 'db-dump-*.sql.gz' | head -n1)
+
+	_mysql -e "drop database $DATABASE_DB_NAME; create database $DATABASE_DB_NAME;"
+
+	cat ${dump_file} | gunzip -c - | _mysql
+	test "$(_mysql -e "SELECT COUNT(*) FROM pet;")" == 2
+}
 
 it_creates_a_valid_sqldump() {
 	export DUMPS_PATH="${TEMPDIR}/dumps"
