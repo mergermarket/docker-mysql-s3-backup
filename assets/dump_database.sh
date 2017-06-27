@@ -34,7 +34,10 @@ dump_mysql() {
 		"--user=${DATABASE_USERNAME}" \
 		"--password=${DATABASE_PASSWORD}" \
 		--add-drop-database \
-		--compact \
+		--skip-add-drop-table \
+		--skip-add-locks \
+		--skip-disable-keys \
+		--skip-set-charset \
 		--compress \
 		--single-transaction \
 		"${DATABASE_DB_NAME}" | gzip -c - > ${DUMPFILE}
