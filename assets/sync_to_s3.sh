@@ -24,13 +24,23 @@ if [ -z "${SYNC_ORIGIN_PATH}" ] && ! [ -d "${SYNC_ORIGIN_PATH}" ]; then
     exit 1
 fi
 
+remove_double_slashes() {
+    local a="$1"
+    local b=""
+    while [ "$b" != "$a" ]; do
+	b="$a"; a="${b//\/\//\/}";
+    done;
+    echo "$a"
+}
+
 do_sync() {
+    target_path=s3://$(remove_double_slashes "${S3_BUCKET_NAME}/${S3_BUCKET_PATH}")
     aws s3 sync \
     	--delete \
     	${S3_ENDPOINT:+--endpoint-url ${S3_ENDPOINT}} \
 	${SYNC_EXCLUDE:+--exclude "${SYNC_EXCLUDE}"} \
     	"${SYNC_ORIGIN_PATH}" \
-    	"s3://${S3_BUCKET_NAME}/${S3_BUCKET_PATH}"
+	"${target_path}"
 }
 
 load_aws_credentials(){

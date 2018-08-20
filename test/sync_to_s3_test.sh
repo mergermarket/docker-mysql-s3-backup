@@ -151,7 +151,27 @@ EOF
 	echo "${output}" | grep -q 'AWS_SESSION_TOKEN=__session_token'
 }
 
+it_removes_duplicated_slashes_in_s3_target() {
+	export S3_BUCKET_NAME="${TEST_BUCKET_NAME}"
+	export S3_BUCKET_PATH="//backup///test/"
+	export S3_BUCKET_PATH_SIMPLIFIED="backup/test"
+	export SYNC_ORIGIN_PATH="${TEMPDIR}/data"
+	_create_test_dir "${SYNC_ORIGIN_PATH}"
+
+	"${PROJECT_DIR}/assets/sync_to_s3.sh"
+
+	sleep 1
+	for f in $(_test_files); do
+		if ! _aws s3 ls "s3://${TEST_BUCKET_NAME}/${S3_BUCKET_PATH_SIMPLIFIED}/$f" > /dev/null; then
+			echo "Did not copy 's3://${TEST_BUCKET_NAME}/${S3_BUCKET_PATH_SIMPLIFIED}/$f'"
+			return 1
+		fi
+	done
+}
+
+
 _run it_syncs_a_complete_directory
 _run it_deletes_old_files
 _run it_does_not_sync_the_exclude_files
 _run it_loads_the_aws_credentials_from_container_role
+_run it_removes_duplicated_slashes_in_s3_target
