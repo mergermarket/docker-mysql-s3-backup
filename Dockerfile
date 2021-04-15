@@ -1,4 +1,4 @@
-FROM alpine:3.9.2
+FROM alpine:3.13.5
 
 ENV AWSCLI_VERSION "1.10.38"
 ENV PACKAGES "groff less python py-pip curl openssl ca-certificates mysql-client bash findutils jq"
